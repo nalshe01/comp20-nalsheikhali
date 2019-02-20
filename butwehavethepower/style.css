@@ -1,0 +1,17 @@
+/* The style sheet for index.html - annotating of the video */
+
+h1 {
+    text-align: center;
+    font-family: "Times New Roman";
+    border: dashed;
+    background-color: lavender;
+}
+
+div.lyrics {
+    text-align: center;
+    font-family: "Times New Roman";
+}
+
+div.butwehavethepower {
+    text-align: center;
+}
