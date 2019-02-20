@@ -17,7 +17,6 @@
 	var video = document.getElementById("butwehavethepower");
     var lyrics = document.getElementById("lyrics");
     video.addEventListener("timeupdate", function() {
-        console.log("Hi");
         
         if (video.currentTime < 6) { 
             lyrics.innerHTML = "";

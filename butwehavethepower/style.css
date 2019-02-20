@@ -1,5 +1,9 @@
 /* The style sheet for index.html - annotating of the video */
 
+body {
+    background-color: lightblue;
+}
+
 h1 {
     text-align: center;
     font-family: "Times New Roman";
@@ -7,11 +11,15 @@ h1 {
     background-color: lavender;
 }
 
-div.lyrics {
+#lyrics {
     text-align: center;
     font-family: "Times New Roman";
+    font-size: 30px;
 }
 
-div.butwehavethepower {
-    text-align: center;
+#butwehavethepower {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
