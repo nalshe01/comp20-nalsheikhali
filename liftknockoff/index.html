@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>The Private Car Service</title>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDi8OEnz9KhctL4HUBPhiqzb_4LFKpW3O0"></script>
+        <link rel="stylesheet" href="liftknockoff.css" />
+        <script>
+            var posLat = 0;
+            var posLng = 0;
+            var me = new google.maps.LatLng(posLat, posLng);
+            var myOptions = {
+                zoom: 13,
+                center: me,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map;
+            var marker;
+            var infoWindow = new google.maps.InfoWindow();
+            var request = new XMLHttpRequest();
+
+            function init() {
+                map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+                getMyLocation();
+            }
+
+            function getMyLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        posLat = position.coords.latitude;
+                        posLng = position.coords.longitude;
+                        // where you would put printLocation (in the callback function)
+                        renderMap();
+                    });
+                }
+                else {
+                    alert("Geolocation is not supported by your web browser.");
+                }
+            }
+
+            function renderMap() {
+                me = new google.maps.LatLng(posLat, posLng);
+                map.panTo(me);
+                marker = new google.maps.Marker({
+                    position: me,
+                    title: "I'm here!"
+                });
+                marker.setMap(map);
+                google.maps.event.addListener(marker, 'click', function() {
+                    infoWindow.setContent(marker.title);
+                    infoWindow.open(map, marker);
+                });
+            }
+
+            /*function getLocation() {
+                request.open("POST", "https://hans-moleman.herokuapp.com/rides", true);
+                request.onreadystatechange = callBack() {
+                    if (request.readyState == 4 && request.status == 200) {
+                        data = request.responseText;
+                        location = JSON.parse(data);
+                        element = document.getElementById("location");
+                        element.innerHTML = "<p>Last seen at " + location["description"] + "</p>";
+                    }
+                    else if (request.readyState == 4 && request.status != 200) {
+                        document.getElementById("location").innerHTML = "<p>Something went wrong.</p>";
+                    }
+                    else {}
+                };
+                request.send()
+            }*/
+
+        </script>
+    </head>
+
+    <body onload="init()">
+        <div id="map_canvas"></div>
+    </body>
+</html>
