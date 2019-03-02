@@ -30,7 +30,7 @@
                     navigator.geolocation.getCurrentPosition(function(position) {
                         posLat = position.coords.latitude;
                         posLng = position.coords.longitude;
-                        // where you would put printLocation (in the callback function)
+                        getLocation();
                         renderMap();
                     });
                 }
@@ -53,7 +53,7 @@
                 });
             }
 
-            /*function getLocation() {
+            function getLocation() {
                 request.open("POST", "https://hans-moleman.herokuapp.com/rides", true);
                 request.onreadystatechange = callBack() {
                     if (request.readyState == 4 && request.status == 200) {
@@ -67,13 +67,14 @@
                     }
                     else {}
                 };
-                request.send()
-            }*/
+                request.send("username=Xt7n67RP&lat=" + posLat + "&lng=" + posLng);
+            }
 
         </script>
     </head>
 
     <body onload="init()">
         <div id="map_canvas"></div>
+        <div id="location"></div>
     </body>
 </html>
