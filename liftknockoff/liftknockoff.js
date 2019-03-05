@@ -10,6 +10,7 @@
             var marker;
             var infoWindow = new google.maps.InfoWindow();
             var request = new XMLHttpRequest();
+            var oldInfoWindow = undefined;
 
             function init() {
                 map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
@@ -18,14 +19,13 @@
                 request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 request.onreadystatechange = function() {
                     if (request.readyState == 4 && request.status == 200) {
-                        console.log("Got the data back!");
                         data = request.responseText;
-                        console.log(data);
                         data = JSON.parse(data);
+                        console.log(data);
                         if (data.vehicles){
                             vehicleMarkers();
                         }
-                        else if (data.passengers){
+                        else {
                             passengerMarkers();
                         }
                     }
@@ -50,9 +50,10 @@
             function renderMap() {
                 me = new google.maps.LatLng(posLat, posLng);
                 map.panTo(me);
+                //disMeToP();
                 marker = new google.maps.Marker({
                     position: me,
-                    title: "username: Xt7n67RP"
+                    title: "username: Xt7n67RP" //+ distancetoP
                 });
                 marker.setMap(map);
                 google.maps.event.addListener(marker, 'click', function() {
@@ -60,54 +61,103 @@
                     infoWindow.open(map, marker);
                 });
             }
-            var oldInfoWindow = undefined;
+
+            function disMeToV() {
+                distanceToV = google.maps.geometry.spherical.computeDistanceBetween(marker.position, vMarker.position);
+            }
+
+            function disMeToP() {
+                distanceToP = google.maps.geometry.spherical.computeDistanceBetween(marker.position, pMarker.position);
+            }
+            
             function vehicleMarkers() {
-                console.log("function reached");
                 var i;
-                //var vMarker;
                 var vIWindow;
                 for (i = 0; i < data.vehicles.length; i++) {
-                    console.log(data.vehicles[i].lat);
-                    let vMarker = new google.maps.Marker({
-                        position: new google.maps.LatLng(data.vehicles[i].lat, data.vehicles[i].lng),
-                        title: data.vehicles[i].username,
-                        icon: "car.png",
-                        infowindow: new google.maps.InfoWindow() 
-                    });
-                    vMarker.setMap(map);
-                    //vIWindow = new google.maps.InfoWindow();
-                    google.maps.event.addListener(vMarker, 'click', function() {
-                        if (oldInfoWindow) {
-                            console.log('ee');
-                            oldInfoWindow.close();
-                        }
-                        oldInfoWindow = this.infoWindow;
-                        console.log(oldInfoWindow);
-                        this.infowindow.setContent(vMarker.title);
-                        this.infowindow.open(map, vMarker);
-                    });
+                    if (data.vehicles[i].username == "WEINERMOBILE") {
+                        let vMarker = new google.maps.Marker({
+                            position: new google.maps.LatLng(data.vehicles[i].lat, data.vehicles[i].lng),
+                            title: data.vehicles[i].username,
+                            icon: "weinermobile.png",
+                            infowindow: new google.maps.InfoWindow() 
+                        });
+                        vMarker.setMap(map);
+                        google.maps.event.addListener(vMarker, 'click', function() {
+                            if (oldInfoWindow) {
+                                oldInfoWindow.close();
+                            }
+                            oldInfoWindow = this.infoWindow;
+                            this.infowindow.setContent(vMarker.title);
+                            this.infowindow.open(map, vMarker);
+                        });
+                    }
+                    else {
+                        let vMarker = new google.maps.Marker({
+                            position: new google.maps.LatLng(data.vehicles[i].lat, data.vehicles[i].lng),
+                            title: data.vehicles[i].username,
+                            icon: "car.png",
+                            infowindow: new google.maps.InfoWindow()
+                        });
+                        vMarker.setMap(map);
+                        google.maps.event.addListener(vMarker, 'click', function() {
+                            if (oldInfoWindow) {
+                                oldInfoWindow.close();
+                            }
+                            oldInfoWindow = this.infoWindow;
+                            this.infowindow.setContent(vMarker.title);
+                            this.infowindow.open(map, vMarker);
+                        });
+                    }
                 }
             }
 
             function passengerMarkers() {
+                console.log("function reached");
                 var k;
                 var pIWindow;
                 for (k = 0; k < data.passengers.length; k++) {
-                    let pMarker = new google.maps.Marker({
-                        position: new google.maps.LatLng(data.passengers[k].lat, data.passengers[k].lng),
-                        title: data.passengers[k].username,
-                        icon: "passenger.png",
-                        infowindow: new google.maps.InfoWindow()
-                    });
-                    pMarker.setMap(map);
-                    google.maps.event.addListener(pMarker, 'click', function() {
-                        if (oldInfoWindow) {
-                            oldInfoWindow.close();
+                    if (data.passengers[k].username == "WEINERMOBILE"){
+                        let pMarker = new google.maps.Marker({
+                            position: new google.maps.LatLng(data.passengers[k].lat, data.passengers[k].lng),
+                            title: data.passengers[k].username,
+                            icon: "weinermobile.png",
+                            infowindow: new google.maps.InfoWindow()
+                        });
+                        pMarker.setMap(map);
+                        google.maps.event.addListener(pMarker, 'click', function() {
+                            if (oldInfoWindow) {
+                                oldInfoWindow.close();
+                            }
+                            oldInfoWindow = this.infoWindow;
+                            this.infowindow.setContent(pMarker.title);
+                            this.infowindow.open(map, pMarker);
+                        });
+                    }
+                    else {
+                        let pMarker = new google.maps.Marker({
+                            position: new google.maps.LatLng(data.passengers[k].lat, data.passengers[k].lng),
+                            title: data.passengers[k].username,
+                            icon: "passenger.png",
+                            infowindow: new google.maps.InfoWindow()
+                        });
+                        pMarker.setMap(map);
+                        google.maps.event.addListener(pMarker, 'click', function() {
+                            if (oldInfoWindow) {
+                                oldInfoWindow.close();
+                            }
+                            oldInfoWindow = this.infoWindow;
+                            this.infowindow.setContent(pMarker.title);
+                            this.infowindow.open(map, pMarker);
+                        });
+                        distanceToP[k] = google.maps.geometry.spherical.computeDistanceBetween(marker.position, pMarker.position);
+                        while (k != 0) {
+                            if (distanceToP[k] < distanceToP[k-1]) {
+                                minimum = distanceToP[k];
+                            }
                         }
-                        oldInfoWindow = this.infoWindow;
-                        this.infowindow.setContent(pMarker.title);
-                        this.infowindow.open(map, pMarker);
-                    });
+                    }
+
+                
                 }
             }
 
