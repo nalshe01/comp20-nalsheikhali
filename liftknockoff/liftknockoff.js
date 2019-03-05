@@ -21,8 +21,13 @@
                         console.log("Got the data back!");
                         data = request.responseText;
                         console.log(data);
-                        vehicles = JSON.parse(data);
-                        vehicleMarkers();
+                        data = JSON.parse(data);
+                        if (data.vehicles){
+                            vehicleMarkers();
+                        }
+                        else if (data.passengers){
+                            passengerMarkers();
+                        }
                     }
 		        };
                 request.send("username=Xt7n67RP&lat=" + posLat + "&lng=" + posLng);
@@ -55,21 +60,53 @@
                     infoWindow.open(map, marker);
                 });
             }
-
+            var oldInfoWindow = undefined;
             function vehicleMarkers() {
+                console.log("function reached");
                 var i;
-                var vMarker;
+                //var vMarker;
                 var vIWindow;
-                for (i = 0; i < vehicles.length; i++) {
-                    vMarker = new google.maps.Marker({
-                        position: new google.maps.LatLng(vehicles[i].lat, vehicles[i].lng),
-                        title: "vehicles[i].username",
-                        icon: "https://tuftsdev.github.io/WebProgramming/assignments/car.png"
+                for (i = 0; i < data.vehicles.length; i++) {
+                    console.log(data.vehicles[i].lat);
+                    let vMarker = new google.maps.Marker({
+                        position: new google.maps.LatLng(data.vehicles[i].lat, data.vehicles[i].lng),
+                        title: data.vehicles[i].username,
+                        icon: "car.png",
+                        infowindow: new google.maps.InfoWindow() 
                     });
-                    vIWindow = new google.maps.InfoWindow();
+                    vMarker.setMap(map);
+                    //vIWindow = new google.maps.InfoWindow();
                     google.maps.event.addListener(vMarker, 'click', function() {
-                        vIWindow.setContent(vMarker.title);
-                        vIWindow.open(map, vMarker);
+                        if (oldInfoWindow) {
+                            console.log('ee');
+                            oldInfoWindow.close();
+                        }
+                        oldInfoWindow = this.infoWindow;
+                        console.log(oldInfoWindow);
+                        this.infowindow.setContent(vMarker.title);
+                        this.infowindow.open(map, vMarker);
+                    });
+                }
+            }
+
+            function passengerMarkers() {
+                var k;
+                var pIWindow;
+                for (k = 0; k < data.passengers.length; k++) {
+                    let pMarker = new google.maps.Marker({
+                        position: new google.maps.LatLng(data.passengers[k].lat, data.passengers[k].lng),
+                        title: data.passengers[k].username,
+                        icon: "passenger.png",
+                        infowindow: new google.maps.InfoWindow()
+                    });
+                    pMarker.setMap(map);
+                    google.maps.event.addListener(pMarker, 'click', function() {
+                        if (oldInfoWindow) {
+                            oldInfoWindow.close();
+                        }
+                        oldInfoWindow = this.infoWindow;
+                        this.infowindow.setContent(pMarker.title);
+                        this.infowindow.open(map, pMarker);
                     });
                 }
             }
