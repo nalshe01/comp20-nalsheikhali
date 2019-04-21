@@ -1,0 +1,91 @@
+<!DOCTYPE html> 
+
+<html>
+    <head>
+        <title> Security Report </title>
+        <meta charset="utf-8" />
+    </head>
+
+    <body>
+        <h1> Security Report </h1>
+        <h2> Introduction </h2>
+        <p> I was hired as a security consultant to document and resolve any security and privacy issues 
+            in two applications, a client-side one and a server-side one.
+        </p>
+        <h2> Methodology </h2>
+        <p> In order to find these vulnerabilities, I used a scanner tool. The tool that I relied on was 
+            the OWASP Zed Attack Proxy (ZAP). I then entered the URL for the general home route as well as
+            the passenger.json route. 
+        </p>
+        <h2> Abstract of Findings </h2>
+        <p> The vulnerabilities that I found were regarding X-Frame Options Headers, No-cache Controls,
+            no XSS protection, and a missing X-Content-Type-Options header.
+        </p>
+        <h2> Issues found </h2>
+
+        <h3> Issue #1 </h3>
+        <p> Issue: X-Frame-Options Header not set</p>
+        <p> Location: This issue was found in the GET response for the home route identified by "/".</p>
+        <p> Severity of issue: This issue was listed to have a medium risk. I agree with this assignment of risk level
+            because this issue can only take place if the user has truly been tricked, otherwise nothing is truly at risk.
+        </p>
+        <p> Description of issue: This issue was found through the ZAP application. The issue of not having this header
+            set is that the application is not protected against "clickjacking" attacks. These attacks allow for users to be 
+            tricked into clicking on something different from what they perceive which can allow for confidential information to 
+            be revealed or other people being able to take over the computer. 
+        </p>
+        <p> Proof of vulnerability: </p>
+        <img src="issue1.png" alt="issue1"></img>
+        <p> As the image shows, the section of code in which my client is setting alternative headers, this particular 
+            header is not set. 
+        </p>
+        <p> Resolution: The solution to this potential problem would be to add the X-Frame-Options Header in the area where other
+            headers are being declared.
+        </p>
+        
+        <h3> Issue #2 </h3>
+        <p> Issue: No Cache-Control Header set</p>
+        <p> Location: This issue was found in the GET response for both the home route and the passenger.json route.</p>
+        <p> Severity of issue: This issue was listed to have a low risk. I agree with this assignment of risk level a lack of 
+            cache control would only mean that the client would not receive the latest changes from the most recent deployment. There
+            is no, however, risk of something bigger happening, such as leaking of confidential information.
+        </p>
+        <p> Description of issue: This issue occurs when someone access a site after the first time that they have accessed it
+            and things look weird due to certain styles being broken. These styles become broken when there are no policies for cache 
+            controlling. This lack of policies makes it so that the user does not receive the latest changes. 
+        </p>
+        <p> Proof of vulnerability: </p>
+        <img src="issue1.png" alt="issue1"></img>
+        <p> As the image shows, the section of code in which my client is declaring alternative headers, there are no headers
+            for cache-controlling.
+        </p>
+        <p> Resolution: The solution to this problem would be to include a header for cache-control.</p>
+
+        <h3> Issue #3 </h3>
+        <p> Issue: No XSS Protection enabled</p>
+        <p> Location: This issue was found in the GET resposne for both the home route and the passenger.json route.</p>
+        <p> Severity of issue: This issue was listed to have a low risk. I, however, believe that this risk should at least be listed 
+            with a medium risk due to the fact that is listed in the OWASP top 10.
+        </p>
+        <p> Description of issue: Including an XSS protection header makes it so that browsers on which programs are running can stop 
+            pages from loading when cross-site scripting attacks are detected. Without this header, the code is vulnerable to this attack.
+        </p>
+        <p> Proof of vulnerability: </p>
+        <img src="issue1.png" alt="issue1"></img>
+        <p> As the image shows, this section of the code does not include any header for XSS protection.</p>
+        <p> Resolution: The solution to this problem would be to include the appropriate header, which can come in 
+            the syntax: X-XSS-Protection: 1; mode=block.
+        </p>
+
+        <h2> Conclusion </h2>
+        <p> In the future I believe that the client should look at resources such as the OWASP top 10 and make sure
+            that the code has the appropriate lines to combat those common security issues.
+        </p>
+
+        <h2> References </h2>
+        <p> https://medium.com/pixelpoint/best-practices-for-cache-control-settings-for-your-website-ff262b38c5a2</p>
+        <p> https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection</p>
+        <p> https://www.owasp.org/index.php/Clickjacking</p>
+        <p> https://www.owasp.org/index.php/Top_10_2013-Top_10</p>
+    </body>
+</html>

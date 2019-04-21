@@ -21,17 +21,17 @@
             function init() {
                 map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
                 getMyLocation();
-                request.open("POST", "https://hans-moleman.herokuapp.com/rides", true);
-                request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                request.open("POST", "https://secret-peak-95207.herokuapp.com/rides", true);
+                request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 request.onreadystatechange = function() {
                     if (request.readyState == 4 && request.status == 200) {
                         data = request.responseText;
                         data = JSON.parse(data);
-                        if (data.vehicles){
+                        if (data.vehicles) {
                             minDisV();
                             vehicleMarkers();
                         }
-                        else {
+                        else if (data.passengers) {
                             minDisP();
                             passengerMarkers();
                         }
@@ -84,6 +84,7 @@
             
             function minDisV() {
                 var j;
+                var n;
                 for (j = 0; j < data.vehicles.length; j++) {
                     distancesV[j] = new google.maps.LatLng(data.vehicles[j].lat, data.vehicles[j].lng);
                     if (n != 0 && distancesV[j] < distancesV[j-1]) {
@@ -101,6 +102,7 @@
                     " Distance to Weinermobile: " + disMeToWB + " miles. ",
                     icon: "me.jpg"
                 });
+                console.log("Here" + minDisVeh);
                 var disMeToV = google.maps.geometry.spherical.computeDistanceBetween(marker.position, minDisVeh);
                 disMeToV *= metToMi;
                 var disMeToWB = google.maps.geometry.spherical.computeDistanceBetween(marker.position, disToWB);
